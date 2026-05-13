@@ -5,25 +5,32 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const mtnYellow = '#FFD100';
+const mtnBlack = '#000000';
+const mtnBlue = '#0057B8'; // Optional accent, not always in MTN branding
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: mtnBlack,
+    background: mtnYellow,
+    tint: mtnBlack,
+    icon: mtnBlack,
+    tabIconDefault: mtnBlack,
+    tabIconSelected: mtnBlack,
+    accent: mtnBlue,
+    link: mtnBlue,
+    border: mtnBlack,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: mtnYellow,
+    background: mtnBlack,
+    tint: mtnYellow,
+    icon: mtnYellow,
+    tabIconDefault: mtnYellow,
+    tabIconSelected: mtnYellow,
+    accent: mtnBlue,
+    link: mtnYellow,
+    border: mtnYellow,
   },
 };
 

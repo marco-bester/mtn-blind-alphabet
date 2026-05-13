@@ -2,6 +2,24 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+# MTN Blind Alphabet
+
+MTN Blind Alphabet is an educational mobile app designed to help users learn and explore the Blind Alphabet, an art project by Willem Boshoff. The app provides audio descriptions and interactive content for each letter or concept in the Blind Alphabet, making the experience accessible to both sighted and visually impaired users.
+
+## What the App Does
+
+- Presents a catalog of Blind Alphabet letters or concepts, each with accompanying audio explanations.
+- Allows users to play audio files describing each item, enhancing accessibility and learning.
+- Supports QR code scanning to quickly access specific content or audio tracks.
+- Offers a simple, intuitive interface with file-based routing for easy navigation.
+
+## How It Works
+
+- **Audio Playback:** Users can browse the catalog and tap on items to listen to audio descriptions. Audio files are stored locally in the app's assets.
+- **QR Code Integration:** Scanning a QR code (from the Blind Alphabet exhibition or printed materials) instantly brings up the relevant content and audio.
+- **Accessible Design:** The app is built with accessibility in mind, ensuring that visually impaired users can navigate and use all features.
+- **File-Based Routing:** The app uses Expo Router for navigation, making it easy to add or modify screens.
+
 ## Get started
 
 1. Install dependencies

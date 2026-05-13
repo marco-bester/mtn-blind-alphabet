@@ -1,7 +1,18 @@
 {
+  "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home",
+"java.configuration.runtimes": [
+    {
+        "name": "JavaSE-17",
+        "path": "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home",
+        "default": true
+    }
+],
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   }
 }
+
+
+

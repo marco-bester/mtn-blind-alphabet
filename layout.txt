@@ -1,0 +1,23 @@
+// Color Scheme (from university-of-johannesburg.jpg):
+// - Primary Orange: #FF6600
+// - Black: #000000
+// - White: #FFFFFF
+
+// Layout Color Assignments:
+// --------------------------------------------------
+// Header:
+//   background-color: #FF6600
+//   text-color: #FFFFFF
+// Navigation Bar:
+//   background-color: #000000
+//   text-color: #FFFFFF
+// Main Content Area:
+//   background-color: #FFFFFF
+//   text-color: #000000
+// Buttons / Accents:
+//   background-color: #FF6600
+//   text-color: #FFFFFF
+// Footer:
+//   background-color: #000000
+//   text-color: #FFFFFF
+// --------------------------------------------------
