@@ -108,6 +108,7 @@ export default function PlayerScreen() {
     try {
       const { title: newTitle, url: newUrl } = parseQrPayload(data);
       closeScanner();
+      player.pause();
       AccessibilityInfo.announceForAccessibility(`Scanned. Loading ${newTitle}.`);
       router.replace({ pathname: '/player', params: newUrl ? { title: newTitle, url: newUrl } : { title: newTitle } });
     } catch (e) {
