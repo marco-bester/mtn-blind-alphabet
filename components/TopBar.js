@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from 'expo-router/react-navigation';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 export default function TopBar() {
@@ -37,9 +37,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
-  topBarTitle: { fontSize: 18, fontWeight: '800' },
-  topBarLogos: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  topLogoImage: { width: 60, height: 44 },
+  topBarTitle: { fontSize: 20, fontWeight: '900' },
+  topBarLogos: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  topLogoImage: { width: 56, height: 42 },
 });

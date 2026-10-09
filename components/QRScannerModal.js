@@ -9,15 +9,16 @@ export default function QRScannerModal({ visible, scanned, onBarCodeScanned, onC
       animationType="slide"
       presentationStyle="fullScreen"
     >
-      <View style={styles.scannerWrapper} accessible accessibilityLabel="Scanner view">
+      <View style={styles.scannerWrapper} accessibilityViewIsModal>
         <CameraView
           onBarcodeScanned={onBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
+          accessible={false}
           barcodeScannerEnabled={!scanned}
           barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
         />
         <View style={styles.overlay}>
-          <Text style={styles.scanText} allowFontScaling>
+          <Text style={styles.scanText} accessibilityRole="header" allowFontScaling>
             Align the QR inside the frame
           </Text>
           <Pressable

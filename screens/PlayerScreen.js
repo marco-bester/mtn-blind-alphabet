@@ -1,17 +1,23 @@
-import { useTheme } from '@react-navigation/native';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useTheme } from 'expo-router/react-navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, Alert, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import QRScannerModal from '../components/QRScannerModal';
 import TopBar from '../components/TopBar';
+import { IconSymbol } from '../components/ui/icon-symbol';
 import { useQRScanner } from '../hooks/useQRScanner';
 import parseQrPayload from '../utils/parseQrPayload';
 import { getSongByTitle } from '../utils/songCatalog';
 
 export default function PlayerScreen() {
   const { colors } = useTheme();
+  const { width, height } = useWindowDimensions();
+  const compactHeight = height < 500;
+  const wideLayout = width >= 700;
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { title, url } = useLocalSearchParams();
   const titleText = Array.isArray(title) ? title[0] : title || '';
@@ -122,61 +128,90 @@ export default function PlayerScreen() {
     await openScanner();
   };
 
+  const goHome = () => {
+    player.pause();
+    AccessibilityInfo.announceForAccessibility('Returning home.');
+    router.replace('/');
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <TopBar />
-      
-      <View style={styles.centerContent}>
-        <Text
-          style={[styles.header, { color: colors.text }]}
-          accessibilityRole="header"
-          allowFontScaling
-        >
-          Now Playing
+
+      <ScrollView contentContainerStyle={[styles.content, compactHeight && styles.compactContent, wideLayout && styles.wideContent]}>
+        <View style={[styles.trackInfo, compactHeight && styles.compactTrackInfo, wideLayout && styles.wideTrackInfo]}>
+          <Text style={[styles.header, compactHeight && styles.compactHeader, { color: colors.primary }]} accessibilityRole="header" allowFontScaling>
+            {isPlaying ? 'NOW PLAYING' : 'READY TO LISTEN'}
+          </Text>
+
+          <Text
+            style={[styles.title, compactHeight && styles.compactTitle, { color: colors.text, fontSize: compactHeight ? 34 : width < 360 ? 44 : 52 }]}
+            accessible
+            accessibilityRole="text"
+            accessibilityLabel={`Song title: ${displayTitle}`}
+            allowFontScaling
+          >
+            {displayTitle}
+          </Text>
+          <View style={[styles.rule, { backgroundColor: colors.primary }]} accessible={false} />
+        </View>
+
+        <View style={[styles.controls, wideLayout && styles.wideControls]}>
+          <Pressable
+            onPress={togglePlay}
+            style={({ pressed }) => [styles.button, compactHeight && styles.compactButton, { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={isPlaying ? 'Pause song' : 'Play song'}
+            accessibilityHint={isPlaying ? 'Pauses the current song' : 'Resumes the current song'}
+          >
+            <Text style={[styles.buttonText, compactHeight && styles.compactButtonText, { color: colors.background }]} allowFontScaling>
+              {isPlaying ? 'Pause' : 'Play'}
+            </Text>
+          </Pressable>
+
+          <Pressable
+            onPress={scanAnother}
+            style={({ pressed }) => [styles.secondary, compactHeight && styles.compactSecondary, { borderColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="Scan another song"
+            accessibilityHint="Opens the QR scanner to scan a new song"
+          >
+            <Text style={[styles.secondaryText, compactHeight && styles.compactSecondaryText, { color: colors.primary }]} allowFontScaling>
+              Scan another song
+            </Text>
+          </Pressable>
+
+          {!ready && (
+            <Text style={[styles.loading, { color: colors.text }]} accessibilityLiveRegion="polite" allowFontScaling>
+              Loading audio…
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+
+      <Pressable
+        onPress={goHome}
+        style={({ pressed }) => [
+          styles.homeFooter,
+          {
+            borderTopColor: colors.primary,
+            backgroundColor: colors.background,
+            paddingBottom: Math.max(insets.bottom, 4),
+            opacity: pressed ? 0.82 : 1,
+          },
+        ]}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel="Home"
+        accessibilityHint="Stops the current song and returns to the Home screen"
+      >
+        <IconSymbol name="house.fill" size={22} color={String(colors.primary)} />
+        <Text style={[styles.homeFooterLabel, { color: colors.primary }]} allowFontScaling>
+          Home
         </Text>
-
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessible
-          accessibilityRole="text"
-          accessibilityLabel={`Title: ${displayTitle}`}
-          allowFontScaling
-        >
-          {displayTitle}
-        </Text>
-
-        <Pressable
-          onPress={togglePlay}
-          style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 }]}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel={isPlaying ? 'Pause' : 'Play'}
-          accessibilityHint={isPlaying ? 'Pauses the current song' : 'Resumes the current song'}
-        >
-          <Text style={[styles.buttonText, { color: colors.background }]} allowFontScaling>
-            {isPlaying ? 'Pause' : 'Play'}
-          </Text>
-        </Pressable>
-
-        <Pressable
-          onPress={scanAnother}
-          style={({ pressed }) => [styles.secondary, { borderColor: colors.primary, opacity: pressed ? 0.85 : 1 }]}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel="Scan another song"
-          accessibilityHint="Opens the QR scanner to scan a new song"
-        >
-          <Text style={[styles.secondaryText, { color: colors.primary }]} allowFontScaling>
-            Scan Another Song
-          </Text>
-        </Pressable>
-
-        {!ready && (
-          <Text style={{ color: colors.text, marginTop: 16 }} accessibilityLiveRegion="polite" allowFontScaling>
-            Loading audio…
-          </Text>
-        )}
-      </View>
+      </Pressable>
 
       <QRScannerModal
         visible={scannerVisible}
@@ -184,37 +219,59 @@ export default function PlayerScreen() {
         onBarCodeScanned={onBarCodeScanned}
         onClose={closeScanner}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const MIN_TOUCH = 48;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, paddingTop: 24 },
-  centerContent: { flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' },
-  header: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
-  title: { fontSize: 22, fontWeight: '800', textAlign: 'center', marginBottom: 24 },
+  container: { flex: 1 },
+  content: { flexGrow: 1, width: '100%', paddingHorizontal: 24, paddingBottom: 24 },
+  compactContent: { paddingBottom: 6 },
+  wideContent: { maxWidth: 720, alignSelf: 'center' },
+  trackInfo: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 36 },
+  compactTrackInfo: { paddingVertical: 8 },
+  wideTrackInfo: { maxWidth: 800, width: '100%', alignSelf: 'center' },
+  header: { fontSize: 15, fontWeight: '900', textAlign: 'center', marginBottom: 16 },
+  compactHeader: { fontSize: 13, marginBottom: 8 },
+  title: { fontWeight: '900', textAlign: 'center', marginBottom: 24 },
+  compactTitle: { marginBottom: 10 },
+  rule: { width: 76, height: 8, borderRadius: 4, alignSelf: 'center' },
+  controls: { alignItems: 'center', gap: 14 },
+  wideControls: { width: '100%', maxWidth: 640, alignSelf: 'center' },
   button: {
-    minWidth: 220,
-    minHeight: MIN_TOUCH,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    width: '100%',
+    minHeight: 84,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12
   },
-  buttonText: { fontSize: 18, fontWeight: '800' },
+  compactButton: { minHeight: 58, paddingVertical: 10 },
+  buttonText: { fontSize: 26, fontWeight: '900', textAlign: 'center' },
+  compactButtonText: { fontSize: 22 },
   secondary: {
-    minWidth: 220,
-    minHeight: MIN_TOUCH,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
+    width: '100%',
+    minHeight: 72,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
     borderRadius: 8,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  secondaryText: { fontSize: 16, fontWeight: '800' }
+  compactSecondary: { minHeight: 54, paddingVertical: 8 },
+  secondaryText: { fontSize: 20, fontWeight: '900', textAlign: 'center' },
+  compactSecondaryText: { fontSize: 17 },
+  homeFooter: {
+    minHeight: 62,
+    paddingTop: 5,
+    borderTopWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  homeFooterLabel: { fontSize: 13, fontWeight: '900', textAlign: 'center' },
+  loading: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
 });

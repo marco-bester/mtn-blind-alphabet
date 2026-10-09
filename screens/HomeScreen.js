@@ -1,8 +1,9 @@
-import { useTheme } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useTheme } from 'expo-router/react-navigation';
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, Alert, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import QRScannerModal from '../components/QRScannerModal';
 import TopBar from '../components/TopBar';
 import { useQRScanner } from '../hooks/useQRScanner';
@@ -10,6 +11,9 @@ import parseQrPayload from '../utils/parseQrPayload';
 
 export default function HomeScreen() {
   const { colors } = useTheme();
+  const { width, height } = useWindowDimensions();
+  const compactHeight = height < 500;
+  const wideLayout = width >= 700;
   const router = useRouter();
   const { autoScan } = useLocalSearchParams();
   const { scannerVisible, scanned, setScanned, openScanner, closeScanner } = useQRScanner();
@@ -49,27 +53,40 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <TopBar />
 
-      <View style={styles.centerContent}>
-        <Text style={[styles.title, { color: colors.text }]} accessibilityRole="header" allowFontScaling>
-          MTN Blind Alphabet
-        </Text>
+      <ScrollView contentContainerStyle={[styles.content, wideLayout && styles.wideContent]}>
+        <View style={[styles.hero, compactHeight && styles.compactHero]}>
+          <Text style={[styles.eyebrow, compactHeight && styles.compactEyebrow, { color: colors.primary }]} allowFontScaling>
+            MTN ACCESSIBILITY
+          </Text>
+          <Text
+            style={[styles.title, compactHeight && styles.compactTitle, { color: colors.text, fontSize: compactHeight ? 36 : width < 360 ? 44 : 52 }]}
+            accessibilityRole="header"
+            allowFontScaling
+          >
+            Blind{'\n'}Alphabet
+          </Text>
+          <View style={[styles.rule, { backgroundColor: colors.primary }]} accessible={false} />
+        </View>
 
         <Pressable
           onPress={openScanner}
-          style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 }]}
+          style={({ pressed }) => [styles.button, compactHeight && styles.compactButton, { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
           accessible
           accessibilityRole="button"
           accessibilityLabel="Scan a song QR code"
           accessibilityHint="Opens the camera to scan a QR code that links to a song"
         >
-          <Text style={[styles.buttonText, { color: colors.background }]} allowFontScaling>
-            Scan a QR Code
+          <Text style={[styles.buttonText, compactHeight && styles.compactButtonText, { color: colors.background }]} allowFontScaling>
+            Scan a song
+          </Text>
+          <Text style={[styles.buttonSubtext, compactHeight && styles.compactButtonSubtext, { color: colors.background }]} allowFontScaling>
+            QR CODE
           </Text>
         </Pressable>
-      </View>
+      </ScrollView>
 
       <QRScannerModal
         visible={scannerVisible}
@@ -77,24 +94,36 @@ export default function HomeScreen() {
         onBarCodeScanned={onBarCodeScanned}
         onClose={closeScanner}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const MIN_TOUCH = 48;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, paddingTop: 24 },
-  centerContent: { flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%' },
-  title: { fontSize: 22, fontWeight: '700', marginBottom: 32 },
+  container: { flex: 1 },
+  content: { flexGrow: 1, width: '100%', paddingHorizontal: 24, paddingBottom: 24 },
+  wideContent: { maxWidth: 640, alignSelf: 'center' },
+  hero: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 36 },
+  compactHero: { paddingVertical: 10 },
+  eyebrow: { fontSize: 15, fontWeight: '900', textAlign: 'center', marginBottom: 16 },
+  compactEyebrow: { fontSize: 13, marginBottom: 8 },
+  title: { fontWeight: '900', textAlign: 'center', marginBottom: 24 },
+  compactTitle: { marginBottom: 10 },
+  rule: { width: 76, height: 8, borderRadius: 4, alignSelf: 'center' },
   button: {
-    minWidth: 240,
-    minHeight: MIN_TOUCH,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    width: '100%',
+    minHeight: 84,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: 12,
   },
-  buttonText: { fontSize: 18, fontWeight: '800' }
+  compactButton: { minHeight: 60, paddingVertical: 10, marginBottom: 4 },
+  buttonText: { fontSize: 24, fontWeight: '900', textAlign: 'center' },
+  compactButtonText: { fontSize: 20 },
+  buttonSubtext: { fontSize: 13, fontWeight: '800', textAlign: 'center', marginTop: 2 },
+  compactButtonSubtext: { fontSize: 11 },
 });
