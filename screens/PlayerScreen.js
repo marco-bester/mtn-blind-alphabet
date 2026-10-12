@@ -221,7 +221,8 @@ export default function PlayerScreen() {
           {
             borderTopColor: colors.primary,
             backgroundColor: colors.background,
-            paddingBottom: Math.max(insets.bottom, 4),
+            paddingBottom: insets.bottom,
+            height: 62 + insets.bottom,
             opacity: pressed ? 0.82 : 1,
           },
         ]}
@@ -289,12 +290,11 @@ const styles = StyleSheet.create({
   secondaryText: { fontSize: 20, fontWeight: '900', textAlign: 'center' },
   compactSecondaryText: { fontSize: 17 },
   homeFooter: {
-    minHeight: 62,
-    paddingTop: 5,
+    paddingTop: 5.5,
     borderTopWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  homeFooterLabel: { fontSize: 13, fontWeight: '900', textAlign: 'center' },
+  homeFooterLabel: { fontSize: 13, fontWeight: '900', textAlign: 'center', marginTop: 2 },
   loading: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
 });
