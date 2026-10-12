@@ -1,7 +1,10 @@
 import { CameraView } from 'expo-camera';
 import { AccessibilityInfo, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function QRScannerModal({ visible, scanned, onBarCodeScanned, onClose }) {
+  const insets = useSafeAreaInsets();
+
   return (
     <Modal
       visible={visible}
@@ -12,12 +15,12 @@ export default function QRScannerModal({ visible, scanned, onBarCodeScanned, onC
       <View style={styles.scannerWrapper} accessibilityViewIsModal>
         <CameraView
           onBarcodeScanned={onBarCodeScanned}
-          style={StyleSheet.absoluteFillObject}
+          style={styles.camera}
           accessible={false}
           barcodeScannerEnabled={!scanned}
           barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
         />
-        <View style={styles.overlay}>
+        <View style={[styles.overlay, { bottom: Math.max(insets.bottom, 16) + 24 }]}>
           <Text style={styles.scanText} accessibilityRole="header" allowFontScaling>
             Align the QR inside the frame
           </Text>
@@ -43,6 +46,7 @@ export default function QRScannerModal({ visible, scanned, onBarCodeScanned, onC
 const MIN_TOUCH = 48;
 const styles = StyleSheet.create({
   scannerWrapper: { flex: 1, backgroundColor: '#000' },
+  camera: { flex: 1 },
   overlay: {
     position: 'absolute',
     bottom: 32,

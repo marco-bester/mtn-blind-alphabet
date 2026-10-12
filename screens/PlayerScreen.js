@@ -43,9 +43,9 @@ export default function PlayerScreen() {
   const displayTitle = (song?.title || titleText).replace(/^(?:TDMD|TM)\d+\s*-\s*/i, '').trim();
   const audioSource = useMemo(() => {
     if (song?.source) return song.source;
-    if (urlText) return { uri: urlText };
+    if (!titleText && urlText) return { uri: urlText };
     return null;
-  }, [song, urlText]);
+  }, [song, titleText, urlText]);
   
   const player = useAudioPlayer(audioSource, { updateInterval: 200 });
   const status = useAudioPlayerStatus(player);

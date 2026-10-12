@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["http://localhost:8081"],
+    "origin": ["http://localhost:8081", "http://localhost:8082"],
     "method": ["GET", "HEAD"],
     "responseHeader": [
       "Accept-Ranges",
