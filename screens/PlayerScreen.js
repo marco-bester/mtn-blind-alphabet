@@ -40,7 +40,7 @@ export default function PlayerScreen() {
     };
   }, [titleText]);
 
-  const displayTitle = song?.title || titleText;
+  const displayTitle = (song?.title || titleText).replace(/^(?:TDMD|TM)\d+\s*-\s*/i, '').trim();
   const audioSource = useMemo(() => {
     if (song?.source) return song.source;
     if (urlText) return { uri: urlText };
