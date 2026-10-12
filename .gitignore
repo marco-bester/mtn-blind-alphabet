@@ -44,3 +44,4 @@ app-example
 
 # local env
 .env
+bugreport-*.zip
