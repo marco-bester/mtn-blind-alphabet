@@ -1,4 +1,9 @@
 {
+  "terminal.integrated.env.osx": {
+    "ANDROID_HOME": "${env:HOME}/Library/Android/sdk",
+    "ANDROID_SDK_ROOT": "${env:HOME}/Library/Android/sdk",
+    "PATH": "${env:HOME}/Library/Android/sdk/platform-tools:${env:HOME}/Library/Android/sdk/emulator:${env:PATH}"
+  },
   "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home",
 "java.configuration.runtimes": [
     {
