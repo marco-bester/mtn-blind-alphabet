@@ -42,7 +42,8 @@
         }
       ],
       "expo-camera",
-      "expo-audio"
+      "expo-audio",
+      "./plugins/withMlKitBarcodeKeepRules"
     ],
     "experiments": {
       "typedRoutes": true,
