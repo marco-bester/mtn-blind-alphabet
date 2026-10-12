@@ -24,14 +24,16 @@ export default function PlayerScreen() {
   const urlText = Array.isArray(url) ? url[0] : url || '';
   const [song, setSong] = useState(null);
   const [lookupDone, setLookupDone] = useState(false);
+  const [lookupFailed, setLookupFailed] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setSong(null);
     setLookupDone(false);
+    setLookupFailed(false);
     getSongByTitle(titleText)
       .then((s) => !cancelled && setSong(s))
-      .catch(() => {})
+      .catch(() => !cancelled && setLookupFailed(true))
       .finally(() => !cancelled && setLookupDone(true));
     return () => {
       cancelled = true;
@@ -64,7 +66,11 @@ export default function PlayerScreen() {
 
     if (!audioSource && !hasErrorAlertedRef.current) {
       hasErrorAlertedRef.current = true;
-      Alert.alert('Song not found', 'Please check the QR code title and try again.');
+      if (lookupFailed) {
+        Alert.alert('No connection', 'Could not load the song. Please check your internet connection and try again.');
+      } else {
+        Alert.alert('Song not found', 'Please check the QR code title and try again.');
+      }
       setReady(true);
       return;
     }
@@ -86,7 +92,7 @@ export default function PlayerScreen() {
         AccessibilityInfo.announceForAccessibility(`Playing: ${displayTitle}`);
       }
     }
-  }, [audioSource, lookupDone, status.isLoaded, status.error, player, displayTitle]);
+  }, [audioSource, lookupDone, lookupFailed, status.isLoaded, status.error, player, displayTitle]);
 
   // Handle load timeout
   useEffect(() => {
