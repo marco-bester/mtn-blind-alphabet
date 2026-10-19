@@ -58,9 +58,6 @@ export default function HomeScreen() {
 
       <ScrollView contentContainerStyle={[styles.content, wideLayout && styles.wideContent]}>
         <View style={[styles.hero, compactHeight && styles.compactHero]}>
-          <Text style={[styles.eyebrow, compactHeight && styles.compactEyebrow, { color: colors.primary }]} allowFontScaling>
-            MTN ACCESSIBILITY
-          </Text>
           <Text
             style={[styles.title, compactHeight && styles.compactTitle, { color: colors.text, fontSize: compactHeight ? 36 : width < 360 ? 44 : 52 }]}
             accessibilityRole="header"
@@ -86,6 +83,15 @@ export default function HomeScreen() {
             QR CODE
           </Text>
         </Pressable>
+        <Pressable
+          onPress={() => router.push('/privacy')}
+          style={styles.privacyLink}
+          accessible
+          accessibilityRole="link"
+          accessibilityLabel="Privacy policy"
+        >
+          <Text style={[styles.privacyLinkText, { color: colors.text }]}>Privacy policy</Text>
+        </Pressable>
       </ScrollView>
 
       <QRScannerModal
@@ -106,8 +112,6 @@ const styles = StyleSheet.create({
   wideContent: { maxWidth: 640, alignSelf: 'center' },
   hero: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 36 },
   compactHero: { paddingVertical: 10 },
-  eyebrow: { fontSize: 15, fontWeight: '900', textAlign: 'center', marginBottom: 16 },
-  compactEyebrow: { fontSize: 13, marginBottom: 8 },
   title: { fontWeight: '900', textAlign: 'center', marginBottom: 24 },
   compactTitle: { marginBottom: 10 },
   rule: { width: 76, height: 8, borderRadius: 4, alignSelf: 'center' },
@@ -126,4 +130,6 @@ const styles = StyleSheet.create({
   compactButtonText: { fontSize: 20 },
   buttonSubtext: { fontSize: 13, fontWeight: '800', textAlign: 'center', marginTop: 2 },
   compactButtonSubtext: { fontSize: 11 },
+  privacyLink: { alignSelf: 'center', padding: 12, minHeight: 48, justifyContent: 'center' },
+  privacyLinkText: { fontSize: 14, fontWeight: '700', textDecorationLine: 'underline' },
 });

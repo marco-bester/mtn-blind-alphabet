@@ -22,7 +22,7 @@ export default function QRScannerModal({ visible, scanned, onBarCodeScanned, onC
         />
         <View style={[styles.overlay, { bottom: Math.max(insets.bottom, 16) + 24 }]}>
           <Text style={styles.scanText} accessibilityRole="header" allowFontScaling>
-            Align the QR inside the frame
+            Point the camera at the QR code. Your phone will vibrate and announce the song when it is detected.
           </Text>
           <Pressable
             onPress={() => {

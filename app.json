@@ -2,14 +2,16 @@
   "expo": {
     "name": "Blind Alphabet",
     "slug": "mtn-blind-alphabet",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mtnblindalphabet",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.mtnblindalphabet"
+      "bundleIdentifier": "com.marcobester.blindalphabet",
+      "deploymentTarget": "16.4",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +23,14 @@
       "permissions": [
         "android.permission.CAMERA"
       ],
-      "package": "com.anonymous.mtnblindalphabet"
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
+      "package": "blind.alphabet",
+      "versionCode": 10
     },
     "web": {
       "output": "static",
@@ -41,9 +50,22 @@
           }
         }
       ],
-      "expo-camera",
-      "expo-audio",
-      "./plugins/withMlKitBarcodeKeepRules"
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Blind Alphabet uses the camera only when you choose Scan a song, to read QR codes and open the matching audio. Images and video are not recorded or uploaded.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
+      "./plugins/withMlKitBarcodeKeepRules",
+      "./plugins/withReleaseSigning",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,

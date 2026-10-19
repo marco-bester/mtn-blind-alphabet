@@ -25,6 +25,10 @@ function loadCatalog() {
   return catalogPromise;
 }
 
+export function preloadSongCatalog() {
+  return loadCatalog();
+}
+
 export async function getSongByTitle(title) {
   const catalog = await loadCatalog();
   const entry = catalog[normalizeTitle(title)];

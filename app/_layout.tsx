@@ -28,7 +28,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={highContrastTheme}>
 
-      <Stack initialRouteName="(tabs)">
+      <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="player" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />

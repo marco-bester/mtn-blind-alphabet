@@ -1,6 +1,7 @@
 import { useCameraPermissions } from 'expo-camera';
 import { useState } from 'react';
 import { AccessibilityInfo, Alert } from 'react-native';
+import { preloadSongCatalog } from '../utils/songCatalog';
 
 export function useQRScanner() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -23,6 +24,7 @@ export function useQRScanner() {
     }
     if (!granted) return;
     setScannerVisible(true);
+    preloadSongCatalog().catch(() => {});
     AccessibilityInfo.announceForAccessibility('Scanner opened. Point the camera at a QR code.');
   };
 

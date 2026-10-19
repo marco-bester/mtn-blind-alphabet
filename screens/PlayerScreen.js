@@ -138,6 +138,7 @@ export default function PlayerScreen() {
       const { title: newTitle, url: newUrl } = parseQrPayload(data);
       closeScanner();
       player.pause();
+      player.replace(null);
       AccessibilityInfo.announceForAccessibility(`Scanned. Loading ${newTitle}.`);
       router.replace({ pathname: '/player', params: newUrl ? { title: newTitle, url: newUrl } : { title: newTitle } });
     } catch (e) {
@@ -147,6 +148,7 @@ export default function PlayerScreen() {
   };
 
   const scanAnother = async () => {
+    player.pause();
     AccessibilityInfo.announceForAccessibility('Opening scanner.');
     await openScanner();
   };
@@ -182,11 +184,13 @@ export default function PlayerScreen() {
         <View style={[styles.controls, wideLayout && styles.wideControls]}>
           <Pressable
             onPress={togglePlay}
-            style={({ pressed }) => [styles.button, compactHeight && styles.compactButton, { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
+            disabled={!status.isLoaded}
+            style={({ pressed }) => [styles.button, compactHeight && styles.compactButton, { backgroundColor: colors.primary, opacity: !status.isLoaded ? 0.55 : pressed ? 0.82 : 1 }]}
             accessible
             accessibilityRole="button"
             accessibilityLabel={isPlaying ? 'Pause song' : 'Play song'}
             accessibilityHint={isPlaying ? 'Pauses the current song' : 'Resumes the current song'}
+            accessibilityState={{ disabled: !status.isLoaded }}
           >
             <Text style={[styles.buttonText, compactHeight && styles.compactButtonText, { color: colors.background }]} allowFontScaling>
               {isPlaying ? 'Pause' : 'Play'}
