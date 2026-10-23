@@ -32,7 +32,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "package": "blind.alphabet",
+      "package": "com.marcobester.blindalphabet",
       "versionCode": 10
     },
     "web": {
