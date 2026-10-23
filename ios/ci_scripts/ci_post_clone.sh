@@ -14,6 +14,24 @@ fi
 cd "${CI_PRIMARY_REPOSITORY_PATH:?CI_PRIMARY_REPOSITORY_PATH is required}"
 : "${EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET:?Set EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET in the Xcode Cloud workflow environment}"
 
+if ! command -v npm >/dev/null 2>&1; then
+  brew_bin="$(command -v brew || true)"
+  if [ -z "$brew_bin" ]; then
+    for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+      if [ -x "$candidate" ]; then
+        brew_bin="$candidate"
+        break
+      fi
+    done
+  fi
+  if [ -z "$brew_bin" ]; then
+    echo 'Homebrew is required to install Node.js in Xcode Cloud.' >&2
+    exit 1
+  fi
+  "$brew_bin" install node@22
+  export PATH="$("$brew_bin" --prefix node@22)/bin:$PATH"
+fi
+
 npm ci
 npx expo prebuild --platform ios --no-install
 pod install --project-directory=ios
