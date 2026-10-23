@@ -19,7 +19,11 @@ const sections = [
   },
   {
     title: 'Data use and sharing',
-    body: 'The app does not include an account system, advertising, or in-app analytics. It does not sell personal information. Google Firebase processes requests as the storage provider; a third-party server may process requests when you scan a QR code containing its audio URL. Those providers handle their own service logs under their published terms and privacy notices.',
+    body: 'The app does not include an account system or advertising. The publisher does not operate a separate analytics service or sell personal information. Google Firebase processes requests as the storage provider; a third-party server may process requests when you scan a QR code containing its audio URL. Those providers handle their own service logs under their published terms and privacy notices.',
+  },
+  {
+    title: 'Android scanner diagnostics',
+    body: "On Android, QR scanning uses Google's ML Kit SDK. Google documents collection of device and app information, per-installation identifiers, performance metrics, API configuration, input and output sizes, feature versions, event types, and error codes for diagnostics and usage analytics. This technical data is separate from camera images and video, which are processed on your device and are not uploaded by the scanner. Google states that ML Kit encrypts this data in transit using HTTPS and does not transfer it to third parties. Details: https://developers.google.com/ml-kit/android-data-disclosure .",
   },
   {
     title: 'Permissions',
@@ -27,7 +31,7 @@ const sections = [
   },
   {
     title: 'Retention and your choices',
-    body: 'The app does not maintain a user account or upload a personal profile. QR scans are processed for the requested action and are not stored by the app as a scan history. You can deny or revoke camera access in Android settings; you can use the app without scanning. You can request information, correction, or deletion by contacting the publisher. Because the app does not keep an account or user profile, there may be no personal data to retrieve or delete. Uninstalling the app removes its local app data.',
+    body: "The app does not maintain a user account or upload a personal profile. QR scans are processed for the requested action and are not stored by the app as a scan history. You can deny or revoke camera access in Android settings; scanning is optional. You can request information, correction, or deletion by contacting the publisher. Uninstalling the app removes its local app data, but does not delete data already held by service providers. Provider retention and deletion practices are governed by their published policies, including Google's privacy policy at https://policies.google.com/privacy . The publisher cannot promise deletion of independently controlled provider logs or SDK telemetry.",
   },
   {
     title: 'Changes',
@@ -45,7 +49,7 @@ export default function PrivacyScreen() {
       <TopBar />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={[styles.title, { color: colors.text }]} accessibilityRole="header">Privacy Policy</Text>
-        <Text style={[styles.date, { color: colors.text }]}>Effective 15 October 2026</Text>
+        <Text style={[styles.date, { color: colors.text }]}>Effective 23 October 2026</Text>
         {sections.map((section) => (
           <View key={section.title} style={styles.section}>
             <Text style={[styles.heading, { color: colors.primary }]} accessibilityRole="header">{section.title}</Text>
