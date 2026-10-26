@@ -1,4 +1,4 @@
-import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
+import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from 'expo-router/react-navigation';
@@ -25,6 +25,19 @@ export default function PlayerScreen() {
   const [song, setSong] = useState(null);
   const [lookupDone, setLookupDone] = useState(false);
   const [lookupFailed, setLookupFailed] = useState(false);
+  const [audioModeReady, setAudioModeReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setAudioModeAsync({ playsInSilentMode: true })
+      .then(() => !cancelled && setAudioModeReady(true))
+      .catch((error) => {
+        if (!cancelled) Alert.alert('Audio error', `Could not configure audio playback: ${error}`);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -84,7 +97,7 @@ export default function PlayerScreen() {
       return;
     }
 
-    if (status.isLoaded) {
+    if (status.isLoaded && audioModeReady) {
       setReady(true);
       if (!hasStartedRef.current) {
         hasStartedRef.current = true;
@@ -92,7 +105,7 @@ export default function PlayerScreen() {
         AccessibilityInfo.announceForAccessibility(`Playing: ${displayTitle}`);
       }
     }
-  }, [audioSource, lookupDone, lookupFailed, status.isLoaded, status.error, player, displayTitle]);
+  }, [audioSource, lookupDone, lookupFailed, status.isLoaded, status.error, audioModeReady, player, displayTitle]);
 
   // Handle load timeout
   useEffect(() => {
