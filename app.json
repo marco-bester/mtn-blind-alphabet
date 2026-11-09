@@ -2,7 +2,7 @@
   "expo": {
     "name": "Blind Alphabet",
     "slug": "mtn-blind-alphabet",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mtnblindalphabet",
@@ -11,7 +11,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.marcobester.blindalphabet",
       "deploymentTarget": "16.4",
-      "buildNumber": "8",
+      "buildNumber": "12",
       "config": {
         "usesNonExemptEncryption": false
       }
@@ -33,7 +33,7 @@
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
       "package": "com.marcobester.blindalphabet",
-      "versionCode": 11
+      "versionCode": 12
     },
     "web": {
       "output": "static",
