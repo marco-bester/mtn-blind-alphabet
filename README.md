@@ -1,68 +1,75 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
 # MTN Blind Alphabet
 
 MTN Blind Alphabet is an educational mobile app designed to help users learn and explore the Blind Alphabet, an art project by Willem Boshoff. The app provides audio descriptions and interactive content for each letter or concept in the Blind Alphabet, making the experience accessible to both sighted and visually impaired users.
 
-## What the App Does
+# Technology and Project Structure
 
-- Presents a catalog of Blind Alphabet letters or concepts, each with accompanying audio explanations.
-- Allows users to play audio files describing each item, enhancing accessibility and learning.
-- Supports QR code scanning to quickly access specific content or audio tracks.
-- Offers a simple, intuitive interface with file-based routing for easy navigation.
+This document describes the stack and app organization used by MTN Blind Alphabet as a reference for building a similar cross-platform app.
 
-## How It Works
+## Technology Stack
 
-- **Audio Playback:** Users can browse the catalog and tap on items to listen to audio descriptions. Audio files are stored locally in the app's assets.
-- **QR Code Integration:** Scanning a QR code (from the Blind Alphabet exhibition or printed materials) instantly brings up the relevant content and audio.
-- **Accessible Design:** The app is built with accessibility in mind, ensuring that visually impaired users can navigate and use all features.
-- **File-Based Routing:** The app uses Expo Router for navigation, making it easy to add or modify screens.
+- **Mobile and web UI:** React Native 0.88 with React 19.3.
+- **Framework and native tooling:** Expo SDK 58, with Expo Router for file-based navigation and Expo modules for native capabilities.
+- **Language:** JavaScript and TypeScript. TypeScript is enabled with strict settings, and Expo Router typed routes are enabled.
+- **Navigation:** Expo Router, backed by React Navigation.
+- **Camera and QR scanning:** `expo-camera`, configured to scan QR codes. Android uses the Google ML Kit barcode scanner through Expo Camera.
+- **Audio playback:** `expo-audio` streams audio from remote URLs.
+- **Other device features:** `expo-haptics` for vibration feedback; `expo-keep-awake` to keep the display on while the app is in use; `expo-image` for image handling; React Native safe-area and screen libraries for device layout.
+- **Content storage:** Firebase Storage hosts a JSON song catalog and audio files. The app uses HTTP requests and Firebase Storage download URLs; it does not include the Firebase JavaScript SDK or a custom application server.
+- **Quality and builds:** npm scripts, TypeScript, ESLint with `eslint-config-expo`, and Expo native projects for Android and iOS.
 
-## Get started
+## How the App Is Organized
 
-1. Install dependencies
+```text
+app/                  Expo Router routes and layouts
+  (tabs)/             Tab navigation routes
+screens/              Screen UI and interaction logic
+components/            Reusable UI, including the QR scanner modal
+hooks/                 Shared stateful behavior, such as scanner controls
+utils/                 QR payload parsing and catalog/storage access
+assets/                App images and other bundled assets
+plugins/               Expo config plugins for native build adjustments
+android/, ios/         Native projects used for platform builds
+```
+
+The route files in `app/` stay small and render screens from `screens/`. Shared UI and device behavior live in `components/` and `hooks/`; parsing and remote data access live in `utils/`.
+
+## Content and Playback Flow
+
+1. The user scans a QR code with `expo-camera`.
+2. `utils/parseQrPayload.js` accepts a plain title, a direct audio URL, or JSON containing a title and optional URL.
+3. For a title, `utils/songCatalog.js` downloads `catalog.json` from Firebase Storage, finds the matching entry, and builds the audio download URL.
+4. `screens/PlayerScreen.js` plays the audio with `expo-audio`, and uses haptics and accessibility announcements to report interactions and playback state.
+
+The catalog is external to the app bundle, so adding or changing catalog entries and audio files does not require an app release. The Firebase Storage rules in this project allow public reads and deny writes; configure rules and media access to suit the needs of any new app.
+
+The home screen's primary action is labeled **Scan**. The app keeps the device display awake while the app is in use.
+
+## Run Locally
+
+Requirements: Node.js/npm, and Xcode for iOS builds or Android Studio for Android builds.
+
+1. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Set the Firebase Storage bucket. Copy `.env.example` to `.env` and set `EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET` to the bucket name for your Firebase project.
+
+3. Start Expo:
 
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Useful platform commands:
 
 ```bash
-npm run reset-project
+npm run ios       # Build and run on an iOS simulator/device
+npm run android   # Build and run on an Android emulator/device
+npm run web       # Start the web version
+npm run lint      # Run Expo ESLint checks
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+For a new project based on this structure, create an Expo app with Expo Router, then add only the Expo modules needed for the app's device features. Keep route definitions separate from screen logic, isolate data access and parsing in `utils/`, and keep environment-specific service configuration outside the source code.

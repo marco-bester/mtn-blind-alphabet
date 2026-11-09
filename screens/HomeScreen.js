@@ -24,7 +24,7 @@ export default function HomeScreen() {
   useEffect(() => {
     // Announce screen for screen readers
     if (!announceOnceRef.current) {
-      AccessibilityInfo.announceForAccessibility('Home. MTN Blind Alphabet. Double tap Scan to scan a song QR code.');
+      AccessibilityInfo.announceForAccessibility('Home. MTN Blind Alphabet. Double tap Scan to scan a QR code.');
       announceOnceRef.current = true;
     }
   }, []);
@@ -73,11 +73,11 @@ export default function HomeScreen() {
           style={({ pressed }) => [styles.button, compactHeight && styles.compactButton, { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
           accessible
           accessibilityRole="button"
-          accessibilityLabel="Scan a song QR code"
-          accessibilityHint="Opens the camera to scan a QR code that links to a song"
+          accessibilityLabel="Scan"
+          accessibilityHint="Opens the camera to scan a QR code"
         >
           <Text style={[styles.buttonText, compactHeight && styles.compactButtonText, { color: colors.background }]} allowFontScaling>
-            Scan a song
+            Scan
           </Text>
           <Text style={[styles.buttonSubtext, compactHeight && styles.compactButtonSubtext, { color: colors.background }]} allowFontScaling>
             QR CODE

@@ -1,3 +1,4 @@
+import { useKeepAwake } from 'expo-keep-awake';
 import { Stack } from 'expo-router';
 import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from 'expo-router/react-navigation';
 import { StatusBar } from 'expo-status-bar';
@@ -10,6 +11,8 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  useKeepAwake();
+
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const highContrastTheme: Theme = {
