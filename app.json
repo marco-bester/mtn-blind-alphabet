@@ -33,7 +33,7 @@
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
       "package": "com.marcobester.blindalphabet",
-      "versionCode": 12
+      "versionCode": 13
     },
     "web": {
       "output": "static",

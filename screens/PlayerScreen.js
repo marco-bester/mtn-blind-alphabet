@@ -215,11 +215,11 @@ export default function PlayerScreen() {
             style={({ pressed }) => [styles.secondary, compactHeight && styles.compactSecondary, { borderColor: colors.primary, opacity: pressed ? 0.82 : 1 }]}
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Scan another song"
-            accessibilityHint="Opens the QR scanner to scan a new song"
+            accessibilityLabel="Scan"
+            accessibilityHint="Opens the QR scanner"
           >
             <Text style={[styles.secondaryText, compactHeight && styles.compactSecondaryText, { color: colors.primary }]} allowFontScaling>
-              Scan another song
+              Scan
             </Text>
           </Pressable>
 
